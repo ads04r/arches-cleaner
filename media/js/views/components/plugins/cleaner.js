@@ -8,19 +8,21 @@ define([
     const CleanerDashboardViewModel = function() {
         const self = this;
         this.loading = ko.observable(true);
-        this.records = ko.observable();
+        this.tests = ko.observable();
+        this.graphs = ko.observableArray();
+        this.selection = ko.observable();
 
         this.getStatus = async function() {
-            const response = await window.fetch("cleaner");
+            const response = await window.fetch("/cleaner");
             const data = await response.json();
-            self.resourceCount = data.resource_count;
-            self.tileCount = data.tile_count;
-            self.records(data.records);
+            self.tests(data.tests);
+            self.graphs(data.graphs);
+            self.selection(false);
             self.loading(false);
         };
 
         this.saveStatus = async function() {
-            const response = await fetch("cleaner", {
+            const response = await fetch("/cleaner", {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -28,7 +30,6 @@ define([
                 }
             });
             const data = await response.json();
-            self.records(data.records);
         };
 
         this.getStatus();

@@ -1,17 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from uuid import uuid4
 
 class CleanerTest(models.Model):
-	test_id = models.UUIDField(primary_key=True)
+	test_id = models.UUIDField(primary_key=True, default=uuid4)
 	function_module = models.CharField(max_length=255, null=False)
 	function_name = models.CharField(max_length=255, null=False)
-	graph_id = models.UUIDField(null=False)
+	graph_id = models.UUIDField(null=True, blank=True)
 	enabled = models.BooleanField(default=False)
 	created_time = models.DateTimeField(auto_now_add=True)
 	"""A datetime representing the time this object was created."""
 	updated_time = models.DateTimeField(auto_now=True)
 	"""A datetime representing the time this object was last modified."""
+
+	@property
+	def test_passed_count(self):
+		return 0
+
+	@property
+	def test_failed_count(self):
+		return 0
 
 	class Meta:
 
@@ -36,3 +45,4 @@ class CleanerTestResult(models.Model):
 		managed = True
 		verbose_name = 'test result'
 		verbose_name_plural = 'test results'
+

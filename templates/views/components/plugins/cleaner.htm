@@ -1,7 +1,79 @@
-{% load i18n %} 
 
 <!--ko ifnot: $data.loading -->
 
-        <h1>Arches Cleaner</h1>
+    <div class="flex">
+        <div class="flex">
 
-<!--/ko-->
+            <div class="side-column-crud-container form-list">
+                <div class="layer-list">
+                    <div class="grid">
+
+<!--ko foreach: { data: $data.tests, as: 'item' } -->
+
+                        <div class="library-card selected-card" data-bind="click: function () { $parent.selection(item) }, css: {'selected': $parent.selection() === item}">
+
+                            <div class="library-icon">
+                                <span class="icon-wrap icon-wrap-sm icon-circle branch-icon bg-primary">
+                                    <i data-bind="css: item.icon_class"></i>
+                                </span>
+                            </div>
+                            <div class="library-card-content">
+                                <div class="crud-card-main">
+                                    <a class="listitem_name" data-bind="text: item.function"></a>
+                                </div>
+                                <div class="crud-card-subtitle">
+					<span data-bind="text: item.passed"></span> passed,
+					<span data-bind="text: item.failed"></span> failed
+                                </div>
+                            </div>
+                        </div>
+
+<!-- /ko -->
+
+                </div>
+                <div class="layer-list">
+			<button class="btn btn-primary" style="width: fit-content; margin-top: 5px" data-bind="click: $data.saveStatus">Save</button>
+                </div>
+            </div>
+        </div>
+
+            <div class="card-form-preview-container" style="height: calc(100vh + 100px);">
+
+                <div class="ep-card-crud-container">
+                    <div class="panel">
+                        <!-- ko if: !selection() -->
+                        <div class="panel-heading">
+                            <div class="panel-title h3"><span>Nothing selected</span></div>
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if: selection() -->
+                        <div class="panel-heading">
+                            <div class="panel-title h3"><i data-bind="css: selection().icon_class"></i> <span data-bind="text: selection().function"></span></div>
+                        </div>
+
+                        <div class="panel-body">
+				<label>Enabled: <input type="checkbox" data-bind="checked: selection().enabled" /></label>
+				<label>Graph: <select data-bind="
+					options: $data.graphs,
+					optionsText: function(item) {
+						return item.name
+					},
+					optionsValue: function(item) {
+						return item.graphid
+					},
+					value: selection().graph"></select></label>
+                        </div>
+                        <!-- /ko -->
+
+                    </div>
+                </div>
+
+            </div>
+
+    </div>
+</div>
+
+<!-- /ko -->
+
+
+
