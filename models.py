@@ -55,6 +55,11 @@ class CleanerTestResult(models.Model):
 	updated_time = models.DateTimeField(auto_now=True)
 	"""A datetime representing the time this object was last modified."""
 
+	def __str__(self):
+		if self.test_result:
+			return 'Successful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
+		return 'Unsuccessful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
+
 	class Meta:
 
 		db_table = "cleaner_test_results"
@@ -71,6 +76,9 @@ class CleanerTestEvent(models.Model):
 	"""A datetime representing the time this object was created."""
 	updated_time = models.DateTimeField(auto_now=True)
 	"""A datetime representing the time this object was last modified."""
+
+	def __str__(self):
+		return 'Run of ' + str(self.function_run)
 
 	class Meta:
 
