@@ -13,9 +13,23 @@
                         <div class="library-card selected-card" data-bind="click: function () { $parent.selection(item) }, css: {'selected': $parent.selection() === item}">
 
                             <div class="library-icon">
-                                <span class="icon-wrap icon-wrap-sm icon-circle branch-icon bg-primary">
+                                <!-- ko if: item.failed == 0 -->
+                                  <!-- ko if: item.passed == 0 -->
+                                  <span class="icon-wrap icon-wrap-sm icon-circle branch-icon bg-primary">
+                                      <i data-bind="css: item.icon_class"></i>
+                                  </span>
+                                  <!-- /ko -->
+                                  <!-- ko if: item.passed > 0 -->
+                                  <span class="icon-wrap icon-wrap-sm icon-circle branch-icon bg-success">
+                                      <i data-bind="css: item.icon_class"></i>
+                                  </span>
+                                  <!-- /ko -->
+                                <!-- /ko -->
+                                <!-- ko if: item.failed > 0 -->
+                                <span class="icon-wrap icon-wrap-sm icon-circle branch-icon bg-danger">
                                     <i data-bind="css: item.icon_class"></i>
                                 </span>
+                                <!-- /ko -->
                             </div>
                             <div class="library-card-content">
                                 <div class="crud-card-main">
@@ -63,6 +77,22 @@
 					},
 					value: selection().graph"></select></label><br/>
 				<label>Enabled: <input type="checkbox" data-bind="checked: selection().enabled" /></label><br/>
+
+				<table class="table table-condensed">
+					<tr>
+						<th>Date</th>
+						<th>Passed</th>
+						<th>Failed</th>
+					</tr>
+					<!--ko foreach: { data: selection().results, as: 'result' } -->
+					<tr>
+						<td><span data-bind="text: result.date"></span></td>
+						<td><span data-bind="text: result.pass"></span></td>
+						<td><span data-bind="text: result.fail"></span></td>
+					</tr>
+		                        <!-- /ko -->
+				</table>
+
                         </div>
                         <!-- /ko -->
 

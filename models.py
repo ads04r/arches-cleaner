@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.db.models import Sum
 from uuid import uuid4
 from inspect import getmembers, isfunction
 import importlib
@@ -18,11 +19,23 @@ class CleanerTest(models.Model):
 
 	@property
 	def test_passed_count(self):
-		return 0
+		if self.events.count() == 0:
+			return 0
+		return self.events.order_by('-updated_time').first().test_passed_count
+
+	@property
+	def total_test_passed_count(self):
+		return self.events.aggregate(passed=Sum('test_passed_count'))['passed'] or 0
 
 	@property
 	def test_failed_count(self):
-		return 0
+		if self.events.count() == 0:
+			return 0
+		return self.events.order_by('-updated_time').first().test_failed_count
+
+	@property
+	def total_test_failed_count(self):
+		return self.events.aggregate(failed=Sum('test_failed_count'))['failed'] or 0
 
 	@property
 	def run(self):
@@ -34,6 +47,10 @@ class CleanerTest(models.Model):
 			if fn[0] == self.function_name:
 				return fn[1]
 		return None
+
+	@property
+	def summary(self):
+		return [{'date': i.updated_time, 'pass': i.test_passed_count, 'fail': i.test_failed_count, 'id': i.pk} for i in self.events.order_by('-updated_time')]
 
 	def __str__(self):
 		return '.'.join([self.function_module, self.function_name])

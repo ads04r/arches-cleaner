@@ -23,9 +23,7 @@ def test_functions():
 		doc = ''
 		if f[1].__doc__:
 			doc = str(f[1].__doc__)
-#		if str(test.graph_id) in icons:
-#			icon = icons[str(test.graph_id)]
-		ret.append({'test_id': str(test.test_id), 'function': test.function_name, 'description': doc, 'enabled': test.enabled, 'graph': str(test.graph_id), 'passed': test.test_passed_count, 'failed': test.test_failed_count, 'icon_class': icon})
+		ret.append({'test_id': str(test.test_id), 'function': test.function_name, 'description': doc, 'enabled': test.enabled, 'graph': str(test.graph_id), 'passed': test.test_passed_count, 'failed': test.test_failed_count, 'icon_class': icon, 'results': test.summary})
 
 	return ret
 
