@@ -1,5 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from cleaner.models import CleanerTest
+from cleaner.util.exec import run_test
+from cleaner.util.display import test_functions
+import sys
 
 class Command(BaseCommand):
 	"""
@@ -16,6 +19,40 @@ class Command(BaseCommand):
 			help="The ID (either UUID or function name) of a test you would like to run.",
 		)
 
+	def run_test(self, test):
+
+		print(test)
+
 	def handle(self, *args, **kwargs):
-		print(kwargs)
+
+		if not 'test' in kwargs:
+			sys.exit(1)
+
+		try:
+			test = CleanerTest.objects.get(test_id=kwargs['test'])
+		except:
+			test = None
+		if test is None:
+			try:
+				test = CleanerTest.objects.get(function_name=kwargs['test'])
+			except:
+				test = None
+		if test is None:
+			full_path = str(kwargs['test']).split('.')
+			try:
+				test = CleanerTest.objects.get(function_module='.'.join(full_path[0:-1]), function_name=full_path[-1])
+			except:
+				test = None
+
+		if test is None:
+			for test_obj in test_functions():
+				try:
+					test = CleanerTest.objects.get(test_id=test_obj['test_id'])
+				except:
+					test = None
+				if test is None:
+					continue
+				self.run_test(test)
+		else:
+			self.run_test(test)
 
