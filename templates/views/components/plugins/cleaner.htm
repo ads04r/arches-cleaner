@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="panel-body">
-				<label>Enabled: <input type="checkbox" data-bind="checked: selection().enabled" /></label>
+				<p data-bind="text: selection().description"></p>
 				<label>Graph: <select data-bind="
 					options: $data.graphs,
 					optionsText: function(item) {
@@ -61,7 +61,8 @@
 					optionsValue: function(item) {
 						return item.graphid
 					},
-					value: selection().graph"></select></label>
+					value: selection().graph"></select></label><br/>
+				<label>Enabled: <input type="checkbox" data-bind="checked: selection().enabled" /></label><br/>
                         </div>
                         <!-- /ko -->
 

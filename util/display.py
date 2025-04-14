@@ -19,10 +19,13 @@ def test_functions():
 		except:
 			test = CleanerTest(function_module=function_module, function_name=f[0], enabled=False, graph_id=None)
 			test.save()
-		icon = 'fa fa-tachometer'
-		if str(test.graph_id) in icons:
-			icon = icons[str(test.graph_id)]
-		ret.append({'test_id': str(test.test_id), 'function': test.function_name, 'enabled': test.enabled, 'graph': str(test.graph_id), 'passed': test.test_passed_count, 'failed': test.test_failed_count, 'icon_class': icon})
+		icon = 'fa fa-list-alt'
+		doc = ''
+		if f[1].__doc__:
+			doc = str(f[1].__doc__)
+#		if str(test.graph_id) in icons:
+#			icon = icons[str(test.graph_id)]
+		ret.append({'test_id': str(test.test_id), 'function': test.function_name, 'description': doc, 'enabled': test.enabled, 'graph': str(test.graph_id), 'passed': test.test_passed_count, 'failed': test.test_failed_count, 'icon_class': icon})
 
 	return ret
 
