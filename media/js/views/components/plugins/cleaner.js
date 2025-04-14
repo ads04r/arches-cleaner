@@ -13,7 +13,7 @@ define([
         this.selection = ko.observable();
 
         this.getStatus = async function() {
-            const response = await window.fetch("/cleaner");
+            const response = await window.fetch("/cleaner/");
             const data = await response.json();
             self.tests(data.tests);
             self.graphs(data.graphs);
@@ -22,14 +22,17 @@ define([
         };
 
         this.saveStatus = async function() {
-            const response = await fetch("/cleaner", {
+            const postdata = self.tests();
+            const response = await fetch("/cleaner/", {
                 method: 'POST',
+                body: JSON.stringify(postdata),
                 credentials: 'include',
                 headers: {
                     "X-CSRFToken": Cookies.get('csrftoken')
                 }
             });
             const data = await response.json();
+            self.loading(false);
         };
 
         this.getStatus();
