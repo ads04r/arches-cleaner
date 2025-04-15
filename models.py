@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import Sum
+from django.utils.formats import date_format
 from uuid import uuid4
 from inspect import getmembers, isfunction
 import importlib
@@ -50,7 +51,7 @@ class CleanerTest(models.Model):
 
 	@property
 	def summary(self):
-		return [{'date': i.updated_time, 'pass': i.test_passed_count, 'fail': i.test_failed_count, 'id': i.pk} for i in self.events.order_by('-updated_time')]
+		return [{'date': i.updated_time, 'friendly_date': date_format(i.updated_time, format='DATETIME_FORMAT', use_l10n=True), 'pass': i.test_passed_count, 'fail': i.test_failed_count, 'id': i.pk} for i in self.events.order_by('-updated_time')]
 
 	def __str__(self):
 		return '.'.join([self.function_module, self.function_name])
