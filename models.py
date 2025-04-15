@@ -63,6 +63,7 @@ class CleanerTest(models.Model):
 		verbose_name_plural = 'tests'
 
 class CleanerTestEvent(models.Model):
+	event_id = models.UUIDField(primary_key=True, default=uuid4)
 	run_as_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_events')
 	function_run = models.ForeignKey(CleanerTest, on_delete=models.CASCADE, related_name='events')
 	test_passed_count = models.IntegerField()
