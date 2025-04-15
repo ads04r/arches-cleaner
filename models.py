@@ -62,28 +62,6 @@ class CleanerTest(models.Model):
 		verbose_name = 'test'
 		verbose_name_plural = 'tests'
 
-class CleanerTestResult(models.Model):
-	run_as_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_results')
-	function_run = models.ForeignKey(CleanerTest, on_delete=models.CASCADE, related_name='results')
-	subject_resource = models.UUIDField(null=False)
-	test_result = models.BooleanField(default=False)
-	created_time = models.DateTimeField(auto_now_add=True)
-	"""A datetime representing the time this object was created."""
-	updated_time = models.DateTimeField(auto_now=True)
-	"""A datetime representing the time this object was last modified."""
-
-	def __str__(self):
-		if self.test_result:
-			return 'Successful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
-		return 'Unsuccessful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
-
-	class Meta:
-
-		db_table = "cleaner_test_results"
-		managed = True
-		verbose_name = 'test result'
-		verbose_name_plural = 'test results'
-
 class CleanerTestEvent(models.Model):
 	run_as_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_events')
 	function_run = models.ForeignKey(CleanerTest, on_delete=models.CASCADE, related_name='events')
@@ -103,3 +81,27 @@ class CleanerTestEvent(models.Model):
 		managed = True
 		verbose_name = 'test run event'
 		verbose_name_plural = 'test run events'
+
+class CleanerTestResult(models.Model):
+	run_as_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_results')
+	function_run = models.ForeignKey(CleanerTest, on_delete=models.CASCADE, related_name='results')
+	subject_resource = models.UUIDField(null=False)
+	test_result = models.BooleanField(default=False)
+	test_event = models.ForeignKey(CleanerTestEvent, null=True, blank=True, on_delete=models.SET_NULL, related_name='test_results')
+	created_time = models.DateTimeField(auto_now_add=True)
+	"""A datetime representing the time this object was created."""
+	updated_time = models.DateTimeField(auto_now=True)
+	"""A datetime representing the time this object was last modified."""
+
+	def __str__(self):
+		if self.test_result:
+			return 'Successful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
+		return 'Unsuccessful run of ' + str(self.function_run) + ' on ' + str(self.subject_resource)
+
+	class Meta:
+
+		db_table = "cleaner_test_results"
+		managed = True
+		verbose_name = 'test result'
+		verbose_name_plural = 'test results'
+
