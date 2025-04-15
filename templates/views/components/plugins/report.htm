@@ -1,0 +1,94 @@
+{% extends "base-manager.htm" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{{ block.super }}
+Test Report
+{% endblock title %}
+
+
+{% block main_content %}
+
+<div class="main-panel card-component-panel">
+	<div class="card-header">
+		<div class="card-header-title">
+			<div class="card-breadcrumbs">
+				<span class="current-crumb">{{ report.function_run.function_name }}</span>
+			</div>
+		</div>
+		<div class="card-component">
+			<p>Results of test function <strong>{{ report.function_run.function_name }}</strong>, run at <strong>{{ report.created_time|date:"DATETIME_FORMAT" }}</strong></p>
+
+{% if report.test_failed_count == 0 %}
+{% if report.test_passed_count == 0 %}
+			<h1><i class="fa fa-warning"></i> Test Did Not Run</h1>
+{% else %}
+			<h1><span class="text-success"><i class="fa fa-check"></i></span> Test Passed</h1>
+{% endif %}
+{% else %}
+			<h1><span class="text-danger"><i class="fa fa-times"></i></span> Test Failed</h1>
+{% endif %}
+
+			<div class="row" style="display: flex;">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-9">
+			<div class="row" style="display: flex;">
+				<div class="col-sm-3">
+					<div class="relative">
+						<p class="text-main account-content-heading">{{ nav.title }}</p>
+						<p class="profile-label-shim">Resource type</p>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="relative">
+						<p class="text-main account-content-heading">{{ report.test_results.count }}</p>
+						<p class="profile-label-shim">Resources checked</p>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="relative">
+						<p class="text-main account-content-heading">{{ report.test_passed_count }}</p>
+						<p class="profile-label-shim">Passed</p>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="relative">
+						<p class="text-main account-content-heading">{{ report.test_failed_count }}</p>
+						<p class="profile-label-shim">Failed</p>
+					</div>
+				</div>
+
+			</div>
+
+{% if report.test_failed_count > 0 %}
+
+<div class="scroll-y">
+<table class="table table-striped table-bordered" cellspacing="0" width="100%">
+<thead>
+	<tr>
+		<th>Resource</th>
+	</tr>
+</thead>
+<tbody>
+{% for t in report.test_results.all %}
+	<tr>
+		<td>{{ t.subject_resource }}</td>
+		<td><a href="/report/{{ t.subject_resource }}" target="_blank" class="btn btn-primary">{% trans "View Report" %}</a></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endif %}
+
+			</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+{% endblock main_content %}
